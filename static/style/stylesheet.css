@@ -1,0 +1,377 @@
+/* Icon font */
+@font-face {
+  font-family: 'icomoon';
+  src:  url('../fonts/icomoon.eot?il1s2a');
+  src:  url('../fonts/icomoon.eot?il1s2a#iefix') format('embedded-opentype'),
+    url('../fonts/icomoon.ttf?il1s2a') format('truetype'),
+    url('../fonts/icomoon.woff?il1s2a') format('woff'),
+    url('../fonts/icomoon.svg?il1s2a#icomoon') format('svg');
+  font-weight: normal;
+  font-style: normal;
+  font-display: block;
+}
+
+[class^="icon-"], [class*=" icon-"] {
+  /* use !important to prevent issues with browser extensions that change fonts */
+  font-family: 'icomoon' !important;
+  speak: never;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+
+/* Default  */
+.icon-check_mark:before {
+    content: "\e905";
+    color: #fff;
+    position: absolute;
+}
+
+.icon-arrow:before {
+    content: "\e900";
+    font-size: 24px;
+    cursor: pointer;
+}
+
+.icon-facebook:before {
+    content: "\e901";
+    font-size: 46px;
+    color: #131821;
+}
+
+.icon-instagram:before {
+    content: "\e902";
+    font-size: 46px;
+    color: #131821;
+}
+.icon-youtube:before {
+    content: "\e903";
+    font-size: 46px;
+    color: #131821;
+}
+.icon-twitter:before {
+    content: "\e904";
+    font-size: 46px;
+    color: #131821;
+}
+
+
+/* Hover effect */
+.icon-facebook:hover:before{
+    color: #fff;
+    background-color: #4267B2;
+    border-radius: 50%;
+}
+
+.icon-instagram:hover:before{
+    color: #fff;
+    background-color: #C13584;
+    border-radius: 50%;
+}
+
+.icon-youtube:hover:before{
+    color: #fff;
+    background-color: #FF0000;
+    border-radius: 50%;
+}
+
+.icon-twitter:hover:before {
+    color: #fff;
+    background-color: #1DA1F2;
+    border-radius: 50%;
+}
+
+/* Active effect */
+.icon-facebook:active:before{
+    color: #fff;
+    background-color: #2F4A80;
+    border-radius: 50%;
+}
+
+.icon-instagram:active:before{
+    color: #fff;
+    background-color: #8F2762;
+    border-radius: 50%;
+}
+
+.icon-youtube:active:before{
+    color: #fff;
+    background-color: #CC0000;
+    border-radius: 50%;
+}
+
+.icon-twitter:active:before {
+    color: #fff;
+    background-color: #177FBF;
+    border-radius: 50%;
+}
+
+
+
+/* End of icon font */
+
+* {
+    margin: 0;
+}
+
+.wrapper {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.banner {
+    width: 65%;
+    height: 100vh;
+    object-fit: cover;
+}
+
+.main-bar {
+    width: 35%;
+    background-color: #f2f5fa;
+    padding: 2% 4%;
+}
+
+.logo {
+    background-image: url('../vectors/pineapple_logo_with_text.svg');
+    width: 118px;
+    height: 40px;
+    object-fit: cover;
+    background-repeat: no-repeat;
+    position: relative;
+}
+
+.navigation-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items:  flex-end;
+    flex-wrap: wrap;
+    font-family: Arial;
+    color: #6A707B;
+    font-size: 16px;
+}
+
+.navigation-buttons {
+    display: flex;
+    font-family: Arial;
+    color: #6A707B;
+    font-size: 16px;
+    gap: 25px;
+    margin-top: 3%
+}
+
+.content {
+    position: relative;
+    margin-top: 35%;
+    z-index: 1;
+}
+
+h1 {
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    font-weight: lighter;
+}
+
+p, label {
+    font-family: Arial;
+    color: #6A707B;
+    font-size: 16px;
+}
+
+a {
+    color: black;
+}
+
+a:hover {
+    color: #4066A5;
+}
+
+a:active {
+    color: #233759;
+}
+
+.advertisment {
+    margin-left: 5%;
+    margin-right: 5%;
+}
+
+.advertisment-form {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 3;
+    margin-right: -25%;
+    margin-top: 5%;
+    border: 1px solid #e3e3e4;
+    border-left: 2px solid #4066A5;
+    background-color: #ffffff;
+    height: 70px;
+}
+
+#email {
+    background-color: transparent;
+    margin-left: 5%;
+    height: 70px;
+    width: 80%;
+    outline: none;
+    border: none;
+    font-family: Arial;
+    color: #6A707B;
+}
+
+.advertisment-form:focus-within, .advertisment-form:hover {
+    box-shadow: 0px 2px 10px gray;
+}
+
+.advertisment-form:hover {
+    border: 1px solid #4066A5;
+    border-left: 2px solid #4066A5;
+}
+
+.advertisment-form > .icon-arrow {
+    opacity: 0.3;
+    margin-right: 3%;
+}
+
+.advertisment-form:hover > .icon-arrow {
+    opacity: 1;
+    color: #4066A5;
+}
+
+.checkbox {
+    margin-top: 7%;
+}
+
+input[type="checkbox"] {
+    position: absolute;
+    opacity: 0;
+    height: 0;
+    width: 0;
+}
+
+label::before {
+    content: '';
+    display: inline-block;
+    width: 26px;
+    height: 26px;
+    border: 1px solid #e3e3e4;
+    background-color: white;
+    vertical-align: middle;
+    border-radius: 5px;
+    margin-right: 3%;
+    margin-left: 5%;
+    transition: 0.2s;
+    cursor: pointer;
+}
+
+input[type="checkbox"]:checked + label::before {
+    text-align: center;
+    line-height: 26px;
+    font-family: 'icomoon' !important;
+    color: #fff;
+    content: "\e905";
+    font-size: 8px;
+    font-weight: lighter;
+    background-color: #4066A5;
+}
+
+.line-that-split-content-and-footer {
+    text-align: center;
+    margin: 7% 5%;
+
+}
+
+.footer {
+    display: flex;
+    justify-content: center;
+    gap: 2%;
+}
+
+.round-icon {
+    border: 1px solid #131821;
+    border-radius: 50%;
+    opacity: 0.3;
+}
+
+.round-icon:hover, .round-icon:active {
+    border: none;
+    opacity: 1;
+    cursor: pointer;
+}
+
+@media only screen and (max-width: 900px) {
+    .wrapper {
+        display: initial;
+        width: 100%;
+    }
+
+    .main-bar {
+        width: 100%;
+        padding: 0;
+        background-color: transparent;
+        background-image: url('../images/summer.png');
+        object-fit: cover;
+        height: 100vh;
+    }
+
+    .banner {
+        display: none;
+    }
+
+    .navigation-bar {
+        align-items: center;
+        background-color: #FFFFFF;
+        padding: 2%;
+    }
+
+    .logo {
+        background-image: url('../vectors/pineapple_logo.svg');
+        background-repeat: no-repeat;
+        width: 25px;
+        height: 40px;
+    }
+
+    .content {
+        align-items: center;
+        background-color: #FFFFFF;
+        padding: 5% 3%;
+    }
+
+    .advertisment-form, .line-that-split-content-and-footer {
+        margin: 0;
+    }
+
+    .line-that-split-content-and-footer {
+        margin-bottom: 3%;
+    }
+
+    .advertisment, .advertisment-form, .checkbox, .line-that-split-content-and-footer  {
+        margin-left: 0;
+        margin-top: 3%;
+    }
+
+    p {
+        margin-top: 5%;
+        margin-bottom: 5%;
+        font-size: 14px;
+    }
+
+    span, label {
+        font-size: 14px;
+    }
+
+    label::before {
+        margin-left: 0;
+    }
+
+    h1 {
+        font-size: 24px;
+    }
+
+}   
