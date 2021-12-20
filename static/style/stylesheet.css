@@ -62,55 +62,51 @@
     color: #131821;
 }
 
+.round-icon:before {
+    border-radius: 50%;
+}
+
+.round-icon:hover {
+    outline: none;
+}
+
+.round-icon:hover::before {
+    color: #fff;
+    box-shadow: -1px 8px 79px -5px rgba(0,0,0,0.43);
+}
 
 /* Hover effect */
 .icon-facebook:hover:before{
-    color: #fff;
     background-color: #4267B2;
-    border-radius: 50%;
 }
 
 .icon-instagram:hover:before{
-    color: #fff;
     background-color: #C13584;
-    border-radius: 50%;
 }
 
 .icon-youtube:hover:before{
-    color: #fff;
     background-color: #FF0000;
-    border-radius: 50%;
 }
 
 .icon-twitter:hover:before {
-    color: #fff;
     background-color: #1DA1F2;
-    border-radius: 50%;
 }
 
 /* Active effect */
 .icon-facebook:active:before{
-    color: #fff;
     background-color: #2F4A80;
-    border-radius: 50%;
 }
 
 .icon-instagram:active:before{
-    color: #fff;
     background-color: #8F2762;
-    border-radius: 50%;
 }
 
 .icon-youtube:active:before{
-    color: #fff;
     background-color: #CC0000;
-    border-radius: 50%;
 }
 
 .icon-twitter:active:before {
-    color: #fff;
     background-color: #177FBF;
-    border-radius: 50%;
 }
 
 
@@ -130,20 +126,22 @@
 .banner {
     width: 65%;
     height: 100vh;
-    object-fit: cover;
+    background-image: url('../images/image_summer.jpg');
+    background-size: cover;
+    /* object-fit: cover; */
 }
 
 .main-bar {
-    width: 35%;
-    background-color: #f2f5fa;
-    padding: 2% 4%;
+    width: 30%;
+    padding: 3%;
+    background: linear-gradient( #fff, #f2f5fa);
 }
 
 .logo {
     background-image: url('../vectors/pineapple_logo_with_text.svg');
     width: 118px;
     height: 40px;
-    object-fit: cover;
+    object-fit: none;
     background-repeat: no-repeat;
     position: relative;
 }
@@ -156,6 +154,8 @@
     font-family: Arial;
     color: #6A707B;
     font-size: 16px;
+    background-color: #fff;
+    z-index: 3;
 }
 
 .navigation-buttons {
@@ -164,13 +164,11 @@
     color: #6A707B;
     font-size: 16px;
     gap: 25px;
-    margin-top: 3%
 }
 
 .content {
     position: relative;
-    margin-top: 35%;
-    z-index: 1;
+    margin-top: 30%;
 }
 
 h1 {
@@ -182,6 +180,11 @@ p, label {
     font-family: Arial;
     color: #6A707B;
     font-size: 16px;
+}
+
+p {
+    margin-top: 5%;
+    margin-bottom: 5%;
 }
 
 a {
@@ -197,8 +200,8 @@ a:active {
 }
 
 .advertisment {
-    margin-left: 5%;
-    margin-right: 5%;
+    margin-left: 8%;
+    margin-right: 8%;
 }
 
 .advertisment-form {
@@ -265,7 +268,7 @@ label::before {
     vertical-align: middle;
     border-radius: 5px;
     margin-right: 3%;
-    margin-left: 5%;
+    margin-left: 8%;
     transition: 0.2s;
     cursor: pointer;
 }
@@ -283,7 +286,7 @@ input[type="checkbox"]:checked + label::before {
 
 .line-that-split-content-and-footer {
     text-align: center;
-    margin: 7% 5%;
+    margin: 7% 8%;
 
 }
 
@@ -294,15 +297,25 @@ input[type="checkbox"]:checked + label::before {
 }
 
 .round-icon {
-    border: 1px solid #131821;
+    outline: 1px solid #131821;
     border-radius: 50%;
     opacity: 0.3;
 }
 
 .round-icon:hover, .round-icon:active {
-    border: none;
     opacity: 1;
     cursor: pointer;
+}
+
+#error-message {
+    color: rgb(196, 29, 29);
+    font-family: Arial;
+    display: none;
+    padding-top: 3%;
+}
+
+#ic_success {
+    margin-bottom: 5%;
 }
 
 @media only screen and (max-width: 900px) {
@@ -318,6 +331,7 @@ input[type="checkbox"]:checked + label::before {
         background-image: url('../images/summer.png');
         object-fit: cover;
         height: 100vh;
+        background-position: bottom;
     }
 
     .banner {
