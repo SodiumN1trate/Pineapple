@@ -1,5 +1,5 @@
 const ERROR_MESSAGE = document.getElementById('error-message')
-
+ 
 const USER_EMAIL_ADDRESS = document.getElementById('email')
 
 const SUBMIT_BUTTON = document.getElementById('submit-button')
@@ -48,14 +48,3 @@ document.getElementById('agree-terms-of-service-checkbox').addEventListener('cli
     }
 })
 
-
-SUBMIT_BUTTON.addEventListener('click', () => {
-    console.log(validated)
-    if(validated) {
-        document.getElementById('advertisment-form-block').innerHTML = `
-            <img src="static/vectors/ic_success.svg" id='ic_success'>
-            <h1>Thanks for subscribing!</h1>
-            <p>You have succesfully subscribed to our email listing.<br>Check your email for the discount code.</p>
-        `
-    }
-})

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="frontend/static/style/stylesheet.css">
+    <title>pineaple.</title>
+</head>
+<body>
+    <div class="wrapper">
+        <div class="main-bar">
+
+            <div class="navigation-bar">
+                <div class="logo"></div>
+                <div class="navigation-buttons">
+                    <span>About</span>
+                    <span>How it works</span>
+                    <span>Contact</span>
+                </div>
+            </div>
+
+            <div class="content">
+                <div id="advertisment-form-block">
+                    <div class="advertisment">
+                        <h1>Subscribe to newsletter</h1>
+                        <p>Subscribe to our newsletter and get 10% discount on pineaple glasses</p>
+                    </div>
+                    <form>
+                        <div class="advertisment-form">
+                            <input placeholder="Type your email adress here..." id="email" type="email" required autocomplete="off">
+                            <span class="icon-arrow" id="submit-button"></span>
+                        </div>
+                        <span id="error-message"></span>
+                        <div class="checkbox">
+                            <input type="checkbox" id="agree-terms-of-service-checkbox" name="agree-terms-of-service">
+                            <label for="agree-terms-of-service-checkbox">I agree to <a href="#">terms of service</a></label>
+                        </div>
+                    </form>
+                </div>
+
+                <hr class="line-that-split-content-and-footer">
+                
+                <div class="footer">
+                    <span class="icon-facebook round-icon"></span>
+                    <span class="icon-instagram round-icon"></span>
+                    <span class="icon-twitter round-icon"></span>
+                    <span class="icon-youtube round-icon"></span>
+                </div>
+            </div>
+
+        </div>
+        <div class="banner"></div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <script src="frontend/static/scripts/form_validator.js"></script>
+    <script src="frontend/static/scripts/form_submit.js"></script>
+</body>
+</html>
