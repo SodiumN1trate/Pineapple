@@ -1,0 +1,123 @@
+<div class="main-bar">
+
+    <div class="navigation-bar">
+        <div class="logo"></div>
+        <div class="navigation-buttons">
+            <span>About</span>
+            <span>How it works</span>
+            <span>Contact</span>
+        </div>
+    </div>
+
+    <div class="content">
+        <div id="advertisment-form-block">
+            <div class="advertisment">
+                <h1>Subscribe to newsletter</h1>
+                <p>Subscribe to our newsletter and get 10% discount on pineaple glasses</p>
+            </div>
+            <form>
+                <div class="advertisment-form">
+                    <input placeholder="Type your email adress here..." id="email" type="email" required autocomplete="off">
+                    <span class="icon-arrow" id="submit-button"></span>
+                </div>
+                <span id="error-message"></span>
+                <div class="checkbox">
+                    <input type="checkbox" id="agree-terms-of-service-checkbox" name="agree-terms-of-service">
+                    <label for="agree-terms-of-service-checkbox">I agree to <a href="#">terms of service</a></label>
+                </div>
+            </form>
+        </div>
+        
+        <hr class="line-that-split-content-and-footer">
+        
+        <div class="footer">
+            <span class="icon-facebook round-icon"></span>
+            <span class="icon-instagram round-icon"></span>
+            <span class="icon-twitter round-icon"></span>
+            <span class="icon-youtube round-icon"></span>
+        </div>
+    </div>
+
+</div>
+<div class="banner"></div>
+
+
+
+<script>
+
+const ERROR_MESSAGE = document.getElementById('error-message')
+
+const USER_EMAIL_ADDRESS = document.getElementById('email')
+
+const SUBMIT_BUTTON = document.getElementById('submit-button')
+
+let validated = false
+
+function email_valid(email) {
+    var r = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/
+    return r.test(email)
+}
+
+function is_checkbox_marked() {
+    return document.getElementById('agree-terms-of-service-checkbox').checked
+}
+
+function create_error_message(value) {
+    ERROR_MESSAGE.style.display = 'block'
+    ERROR_MESSAGE.innerHTML = value
+}
+
+function email_check_illegal_domain(email) {
+    var illegal_characters = /\.co$/
+    return illegal_characters.test(email)
+}
+
+
+$(USER_EMAIL_ADDRESS).keyup(() => { 
+    ERROR_MESSAGE.style.display = 'block'
+    if(USER_EMAIL_ADDRESS.value === ''){
+        create_error_message('Email address is required')
+    } else if(email_valid(USER_EMAIL_ADDRESS.value) == false) {
+        create_error_message('Please provide a valid e-mail address')
+    } else if(email_check_illegal_domain(USER_EMAIL_ADDRESS.value)) {
+        create_error_message('We are not accepting subscriptions from Colombia emails')
+    } else if(!is_checkbox_marked()){
+        create_error_message('You must accept the terms and conditions')
+    } else {
+        ERROR_MESSAGE.style.display = 'none'
+        validated = true
+    }
+})
+
+$('#agree-terms-of-service-checkbox').click(() =>{
+    if(is_checkbox_marked()){
+        ERROR_MESSAGE.style.display = 'none'
+        validated = true
+    }
+})
+
+$('#submit-button').click(() => {
+    if(validated){
+        $.ajax({
+            type: 'POST',
+            url: '../Pineapple/add_email',
+            data: {
+                email: $("input#email").val(),
+                checkbox: $("input#agree-terms-of-service-checkbox").prop('checked')
+            },
+            success: (message) => {
+                if(message['error']){
+                    create_error_message(message['error'])
+                }
+                else{
+                    $('#advertisment-form-block').html(`
+                    <img src="frontend/static/vectors/ic_success.svg" id='ic_success'>
+                    <h1>Thanks for subscribing!</h1>
+                    <p>You have succesfully subscribed to our email listing.<br>Check your email for the discount code.</p>
+                `)
+                }
+            }
+        })
+    }
+})
+</script>

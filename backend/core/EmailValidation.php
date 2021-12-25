@@ -2,10 +2,8 @@
 
 class EmailValidation
 {
-    private $isValid = false;
     private $email;
     private $checkbox;
-    private $errorsCount = 0;
     public function __construct($email, $checkbox)
     {
         $this->email = $email;
@@ -15,43 +13,47 @@ class EmailValidation
 
     public static function getEmailValidStatus(Email $obj)
     {
-        return response((new EmailValidation($obj->getEmail(), $obj->getCheckbox()))->isEmailValid());
+        return (new EmailValidation($obj->getEmail(), $obj->getCheckbox()))->validEmail();
     }
 
     public function isEmailProvided()
     {
-       if($this->email == '') $this->errorsCount += 1;
+       return $this->email != '';
     }
 
-    public function isEmail()
+    private function isEmail()
     {
-        if(!preg_match('/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/', $this->email)) $this->errorsCount += 1;
+        return preg_match('/^[\w\-\.]+@([\w\-]+\.)+[\w\-]{2,4}$/', $this->email);
     }
 
-    public function isCheckboxChecked()
+    private function isCheckboxChecked()
     {
-        if($this->checkbox == "false") $this->errorsCount += 1;
+        return $this->checkbox == "true";
     }
 
-    public function isEmailContainsIllegalDomain()
+    private function isEmailContainsIllegalDomain()
     {
-        if(preg_match('/\.co$/', $this->email)) $this->errorsCount += 1;
+        return preg_match('/\.co$/', $this->email);
     }
 
-    
-    // TO:DO
-    // private function validEmail()
-    // {
-    //     $validations = array('isEmailProvided', 'isEmail', 'isCheckboxChecked', 'isEmailContainsIllegalDomain');
-    //     foreach ($validations as $key => $value)
-    //     {
-    //         call_user_func($validations);
-    //     }
-    //     $this->isValid = true;
-    // }
-
-    public function isEmailValid()
+    private function validEmail()
     {
-        return $this->isValid;
+        if(!$this->isEmailProvided())
+        {
+            return array('error'=>'Email address is required');
+        }
+        elseif(!$this->isEmail())
+        {
+            return array('error'=>'Please provide a valid e-mail address');
+        }
+        elseif(!$this->isCheckboxChecked())
+        {
+            return array('error'=>'You must accept the terms and conditions');
+        }
+        elseif($this->isEmailContainsIllegalDomain())
+        {
+            return array('error'=>'We are not accepting subscriptions from Colombia emails');
+        }
+        return array('email'=>$this->email, 'checkbox'=>$this->checkbox);
     }
 }

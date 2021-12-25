@@ -1,0 +1,107 @@
+<div id="wrapper">
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>Email</th>
+            <th>Date</th>
+        </tr>
+    </table>
+    
+    <div>
+        <h1>Sort by</h1>
+        <button id="sort-date">By Date</button>
+        <button id="sort-name">By Name</button>
+    </div>
+
+    <div class="hosts">
+        <h1>Hosts</h1>
+    </div>
+    
+</div>
+
+
+<script>
+// Get emails sorted by date ASC
+$.ajax({
+    type: 'GET',
+    url: '../Pineapple/get_email_list',
+    success: (response)=>{
+        response.forEach(email => {
+            $('table tr:last').after(`
+            <tr class="row">
+                <td>${ email.id }</td>
+                <td>${ email.email }</td>
+                <td>${ email.date }</td>
+            </tr>
+            `)
+        })
+    }
+})
+
+// Get Hosts
+$.ajax({
+    type: 'GET',
+    url: '../Pineapple/get_host_list',
+    success: (response)=>{
+        response.forEach(host => {
+            $('.hosts').after(`
+                <button class="host-button">${ host }</button>
+            `)
+        })
+    }
+})
+
+
+$('#sort-date').click(()=>{
+    $('table tr.row').remove()
+    $.ajax({
+        type: 'GET',
+        url: '../Pineapple/get_email_list',
+        success: (response)=>{
+            response.forEach(email => {
+                $('table tr:last').after(`
+                <tr class="row">
+                    <td>${ email.id }</td>
+                    <td>${ email.email }</td>
+                    <td>${ email.date }</td>
+                </tr>
+                `)
+            })
+        }
+    })
+})
+
+$('#sort-name').click(()=>{
+    $('table tr.row').remove()
+    $.ajax({
+        type: 'GET',
+        url: '../Pineapple/sorted_by_name',
+        success: (response)=>{
+            response.forEach(email => {
+                $('table tr:last').after(`
+                <tr class="row">
+                    <td>${ email.id }</td>
+                    <td>${ email.email }</td>
+                    <td>${ email.date }</td>
+                </tr>
+                `)
+            })
+        }
+    })
+})
+
+
+</script>
+
+<style>
+    #wrapper {
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    table, tr, th,td {
+        border: 1px solid black;
+    }
+</style>
