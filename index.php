@@ -16,5 +16,8 @@ $router->add('/get_email_list', 'Email::getEmails');
 $router->add('/get_host_list', 'Email::getHosts');
 $router->add('/sorted_by_name', 'Email::getEmailsSortedByName');
 $router->add('/sorted_by_host', 'Email::getEmailsSortedByHost');
+$router->add('/sorted_by_date', 'Email::getEmailsSortedByDate');
+$router->add('/search_email', 'Email::searchEmail');
+$router->add('/delete_email', 'Email::deleteEmail');
 
 $router->submit();

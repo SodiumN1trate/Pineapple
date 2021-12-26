@@ -1,4 +1,5 @@
 <div id="wrapper">
+    <h1 style="color: red;">PRESS F5 TO GET BACK ALL EMAILS</h1>
     <table>
         <tr>
             <th>ID</th>
@@ -6,12 +7,19 @@
             <th>Date</th>
         </tr>
     </table>
-    
+
+    <div>
+        <h1>Search</h1>
+        <input type="text" id="search-bar">
+        <button id="search">Meklēt</button>
+    </div>
+
     <div>
         <h1>Sort by</h1>
         <button id="sort-date">By Date</button>
         <button id="sort-name">By Name</button>
     </div>
+
 
     <div class="hosts">
         <h1>Hosts</h1>
@@ -21,22 +29,65 @@
 
 
 <script>
-// Get emails sorted by date ASC
-$.ajax({
-    type: 'GET',
-    url: '../Pineapple/get_email_list',
-    success: (response)=>{
-        response.forEach(email => {
-            $('table tr:last').after(`
+
+let email_list = {}
+
+function render_emails(emails) {
+    $('table tr.row').remove()
+    email_list = emails
+    emails.forEach(email => {
+        $('table tr:last').after(`
             <tr class="row">
-                <td>${ email.id }</td>
-                <td>${ email.email }</td>
-                <td>${ email.date }</td>
+                <td id='id'>${email.id}</td>
+                <td>${email.email}</td>
+                <td>${email.date}</td>
             </tr>
-            `)
+        `)
+    })
+
+    add_delete_to_emails()
+}
+
+function add_listener_to_host_buttons() {
+    $(".host-button").each((index, element) => {
+        $(element).click(() => {
+            $.ajax({
+                type: 'POST',
+                url: '../Pineapple/sorted_by_host',
+                data: { host: $(element).text(), emails: email_list  },
+                success: (response) => {render_emails(response)}
+            })
         })
-    }
-})
+    })
+}
+
+function add_delete_to_emails() {
+    $("table tr.row").each((index, row) => {
+        $(row).dblclick((event) => {
+            $.ajax({
+                type: "POST",
+                url: "../Pineapple/delete_email",
+                data: {id: event.target.parentNode.childNodes[1].innerHTML},
+                success: (response) => {
+                    alert("Email deleted!")
+                    get_emails();
+                }
+            })
+        })
+    })
+}
+
+function get_emails() {
+    // Get emails sorted by date ASC
+    $.ajax({
+        type: 'GET',
+        url: '../Pineapple/get_email_list',
+        success: (response) => {
+            render_emails(response)
+        }
+    })  
+}
+get_emails()
 
 // Get Hosts
 $.ajax({
@@ -44,49 +95,39 @@ $.ajax({
     url: '../Pineapple/get_host_list',
     success: (response)=>{
         response.forEach(host => {
-            $('.hosts').after(`
+            $('.hosts h1').after(`
                 <button class="host-button">${ host }</button>
             `)
         })
+        add_listener_to_host_buttons();
     }
 })
 
 
 $('#sort-date').click(()=>{
-    $('table tr.row').remove()
     $.ajax({
-        type: 'GET',
-        url: '../Pineapple/get_email_list',
-        success: (response)=>{
-            response.forEach(email => {
-                $('table tr:last').after(`
-                <tr class="row">
-                    <td>${ email.id }</td>
-                    <td>${ email.email }</td>
-                    <td>${ email.date }</td>
-                </tr>
-                `)
-            })
-        }
+        type: 'POST',
+        url: '../Pineapple/sorted_by_date',
+        data: {emails : email_list},
+        success: (response)=>{ render_emails(response) }
     })
 })
 
 $('#sort-name').click(()=>{
-    $('table tr.row').remove()
     $.ajax({
-        type: 'GET',
+        type: 'POST',
         url: '../Pineapple/sorted_by_name',
-        success: (response)=>{
-            response.forEach(email => {
-                $('table tr:last').after(`
-                <tr class="row">
-                    <td>${ email.id }</td>
-                    <td>${ email.email }</td>
-                    <td>${ email.date }</td>
-                </tr>
-                `)
-            })
-        }
+        data: { emails: email_list },
+        success: (response)=>{ render_emails(response)}
+    })
+})
+
+$('button#search').click(() => {
+    $.ajax({
+        type: 'POST',
+        url: '../Pineapple/search_email',
+        data: { input: $('#search-bar').val(), emails: email_list },
+        success: (response) => { render_emails(response) }
     })
 })
 

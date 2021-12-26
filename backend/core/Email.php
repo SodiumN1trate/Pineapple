@@ -42,14 +42,14 @@ class Email
 
     private function saveEmail()
     {
-        return (new Database)->get()->query(sprintf("INSERT INTO `emails` (`email`, `host`, `date`) VALUES ('%s', '%s', '%s');", $this->email, $this->host, date("Y-m-d H:i:s")));
+        return (new Database)->get()->query(sprintf("INSERT INTO `emails` (`email`, `host`, `date`) VALUES ('%s', '%s', '%s');", $this->email, ucfirst($this->host), date("Y-m-d H:i:s")));
     }
 
     // Emails from db
-    public static function getEmailList($sort_by, $order)
+    public static function getEmailList($sort_by, $order, $like = '@')
     {
         $allEmails = array();
-        $query = (new Database)->get()->query(sprintf("SELECT * FROM `emails` ORDER BY `%s` %s;", $sort_by, $order));
+        $query = (new Database)->get()->query(sprintf("SELECT * FROM `emails` WHERE `email` LIKE '%s' ORDER BY `%s` %s;", '%' . $like . '%', $sort_by, $order));
         while($result = $query->fetch_assoc()){
             $allEmails[] = $result;
         }
@@ -62,24 +62,29 @@ class Email
         return response(Email::getEmailList('date', 'DESC'));
     }
 
-    // Emails for response
     public static function getEmailsSortedByName()
     {
-        return response(Email::getEmailList('email', 'ASC'));
+        sort($_POST['emails']);
+        return response($_POST['emails']);
+    }
+
+    public static function getEmailsSortedByDate()
+    {
+        array_multisort(array_column($_POST['emails'], 'date'), SORT_DESC, $_POST['emails']);
+        return response($_POST['emails']);
     }
     
     public static function getEmailsSortedByHost()
     {
-        $emailWithHost = array();
-        $emails = Email::getEmailList('date', 'DESC');
-        foreach($emails as $key => $value)
+        $validEmails = array();
+        foreach ($_POST['emails'] as $key => $value)
         {
-            if($emails[$key]['host'] == $_POST['host'])
+            if(str_contains(strtolower($_POST['emails'][$key]['host']), strtolower($_POST['host'])))
             {
-                $emailWithHost[] = $emails[$key];
+                $validEmails[] = $_POST['emails'][$key];
             }
         }
-        return response($emailWithHost);
+        return response($validEmails);
     }
 
     public static function getHosts()
@@ -96,4 +101,21 @@ class Email
         return response($hosts);
     }
 
+    public static function searchEmail()
+    {
+        $validEmails = array();
+        foreach ($_POST['emails'] as $key => $value)
+        {
+            if(str_contains(strtolower($_POST['emails'][$key]['email']), strtolower($_POST['input'])))
+            {
+                $validEmails[] = $_POST['emails'][$key];
+            }
+        }
+        return response($validEmails);
+    }
+
+    public static function deleteEmail()
+    {
+        return response((new Database)->get()->query(sprintf("DELETE FROM `emails` WHERE `id`=%d ;", $_POST['id'])));
+    }
 }
