@@ -64,7 +64,7 @@ class Email
 
     public static function getEmailsSortedByName()
     {
-        sort($_POST['emails']);
+        array_multisort(array_column($_POST['emails'], 'email'), SORT_ASC, $_POST['emails']);
         return response($_POST['emails']);
     }
 
