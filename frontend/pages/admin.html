@@ -1,5 +1,4 @@
 <div id="wrapper">
-    <h1 style="color: red;">PRESS F5 TO GET BACK ALL EMAILS</h1>
     <table>
         <tr>
             <th>ID</th>
@@ -7,11 +6,10 @@
             <th>Date</th>
         </tr>
     </table>
-
+    <h2 id="error"></h2>
     <div>
         <h1>Search</h1>
         <input type="text" id="search-bar">
-        <button id="search">Meklēt</button>
     </div>
 
     <div>
@@ -23,6 +21,7 @@
 
     <div class="hosts">
         <h1>Hosts</h1>
+        <button id="all_emails">All emails</button>
     </div>
     
 </div>
@@ -31,10 +30,10 @@
 <script>
 
 let email_list = {}
+let search_result_emails = {}
 
 function render_emails(emails) {
     $('table tr.row').remove()
-    email_list = emails
     emails.forEach(email => {
         $('table tr:last').after(`
             <tr class="row">
@@ -48,14 +47,28 @@ function render_emails(emails) {
     add_delete_to_emails()
 }
 
+function set_error_message(message) {
+    $('h2#error').html(message)
+}
+
 function add_listener_to_host_buttons() {
     $(".host-button").each((index, element) => {
         $(element).click(() => {
             $.ajax({
                 type: 'POST',
-                url: '../Pineapple/sorted_by_host',
-                data: { host: $(element).text(), emails: email_list  },
-                success: (response) => {render_emails(response)}
+                url: '../sorted_by_host',
+                data: { host: $(element).text(), emails: search_result_emails.length === undefined ? email_list : search_result_emails},
+                success: (response) => {
+                    console.log(response)
+                    if(response.length < 1)
+                    {
+                        set_error_message("No such emails")
+                    }
+                    else{
+                        set_error_message("")
+                        render_emails(response)
+                    }
+                }
             })
         })
     })
@@ -66,7 +79,7 @@ function add_delete_to_emails() {
         $(row).dblclick((event) => {
             $.ajax({
                 type: "POST",
-                url: "../Pineapple/delete_email",
+                url: "../delete_email",
                 data: {id: event.target.parentNode.childNodes[1].innerHTML},
                 success: (response) => {
                     alert("Email deleted!")
@@ -81,18 +94,20 @@ function get_emails() {
     // Get emails sorted by date ASC
     $.ajax({
         type: 'GET',
-        url: '../Pineapple/get_email_list',
+        url: '../get_email_list',
         success: (response) => {
+            email_list = response
             render_emails(response)
         }
-    })  
+    })
 }
+
 get_emails()
 
 // Get Hosts
 $.ajax({
     type: 'GET',
-    url: '../Pineapple/get_host_list',
+    url: '../get_host_list',
     success: (response)=>{
         response.forEach(host => {
             $('.hosts h1').after(`
@@ -107,8 +122,8 @@ $.ajax({
 $('#sort-date').click(()=>{
     $.ajax({
         type: 'POST',
-        url: '../Pineapple/sorted_by_date',
-        data: {emails : email_list},
+        url: '../sorted_by_date',
+        data: {emails: search_result_emails.length === undefined ? email_list : search_result_emails},
         success: (response)=>{ render_emails(response) }
     })
 })
@@ -116,21 +131,34 @@ $('#sort-date').click(()=>{
 $('#sort-name').click(()=>{
     $.ajax({
         type: 'POST',
-        url: '../Pineapple/sorted_by_name',
-        data: { emails: email_list },
+        url: '../sorted_by_name',
+        data: { emails: search_result_emails.length === undefined ? email_list : search_result_emails },
         success: (response)=>{ render_emails(response)}
     })
 })
 
-$('button#search').click(() => {
-    $.ajax({
-        type: 'POST',
-        url: '../Pineapple/search_email',
-        data: { input: $('#search-bar').val(), emails: email_list },
-        success: (response) => { render_emails(response) }
-    })
+$('#search-bar').keyup(() => {
+    if(!$('#search-bar').val()){
+        get_emails()
+        search_result_emails = {}
+    }
+    else{
+        $.ajax({
+            type: 'POST',
+            url: '../search_email',
+            data: { input: $('#search-bar').val(), emails: email_list },
+            success: (response) => {
+                search_result_emails = response
+                render_emails(response)
+            }
+        })
+    }
 })
 
+$("#all_emails").click(()=>{
+    get_emails()
+    search_result_emails = {}
+})
 
 </script>
 
@@ -144,5 +172,9 @@ $('button#search').click(() => {
 
     table, tr, th,td {
         border: 1px solid black;
+    }
+
+    #error {
+        color: red;
     }
 </style>

@@ -18,7 +18,6 @@ class Router
     public function submit()
     {
         $uriParameter = isset($_SERVER['PATH_INFO']) ? $_SERVER['PATH_INFO'] : '/';
-     
         foreach ($this->uri as $uriKey => $uriValue)
         {
             if($uriValue ==  $uriParameter)

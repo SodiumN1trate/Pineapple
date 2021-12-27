@@ -114,6 +114,11 @@ class Email
         return response($validEmails);
     }
 
+    public static function filterEmail($request)
+    {
+        
+    }
+
     public static function deleteEmail($request)
     {
         return response((new Database)->get()->query(sprintf("DELETE FROM `emails` WHERE `id`=%d ;", $request['id'])));

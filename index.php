@@ -21,4 +21,3 @@ $router->add('/search_email', 'Email::searchEmail', 'POST');
 $router->add('/delete_email', 'Email::deleteEmail', 'POST');
 
 $router->submit();
-

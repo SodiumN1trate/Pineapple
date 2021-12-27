@@ -1,9 +1,9 @@
 $(document).ready(()=>{
     let uri = window.location.pathname
-    if(uri === '/Pineapple/'){
+    if(uri === '/'){
         $('.wrapper').load('frontend/pages/main.html')
     }
-    else if(uri === '/Pineapple/email_list'){
+    else if(uri === '/email_list'){
         $('.wrapper').load('frontend/pages/admin.html')
     }
 })

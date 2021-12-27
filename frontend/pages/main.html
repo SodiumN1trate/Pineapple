@@ -100,7 +100,7 @@ $('#submit-button').click(() => {
     if(validated){
         $.ajax({
             type: 'POST',
-            url: '../Pineapple/add_email',
+            url: '../add_email',
             data: {
                 email: $("input#email").val(),
                 checkbox: $("input#agree-terms-of-service-checkbox").prop('checked')
