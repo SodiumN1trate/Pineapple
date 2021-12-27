@@ -4,14 +4,15 @@ class Router
 {
     private $uri = array();
     private $controller = array();
-
-    public function add($uri, $controller = null)
+    private $method = array();
+    public function add($uri, $controller = null, $method = 'GET')
     {
-        array_push($this->uri, $uri);
+        $this->uri[] = $uri;
         if($controller != null)
         {
-            array_push($this->controller, $controller);
+            $this->controller[] = $controller;
         }
+        $this->method[] = $method;
     }
 
     public function submit()
@@ -24,9 +25,16 @@ class Router
             {
                 if(strpos($this->controller[$uriKey], '::'))
                 {
-                    call_user_func($this->controller[$uriKey]);
+                    if($this->method[$uriKey] == 'POST'){
+                        call_user_func($this->controller[$uriKey], $_POST);
+                    }
+                    else
+                    {
+                        call_user_func($this->controller[$uriKey]);
+                    }
                 }
-                else {
+                else
+                {
                     new $this->controller[$uriKey];
                 }
             }

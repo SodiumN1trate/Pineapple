@@ -62,26 +62,26 @@ class Email
         return response(Email::getEmailList('date', 'DESC'));
     }
 
-    public static function getEmailsSortedByName()
+    public static function getEmailsSortedByName($request)
     {
-        array_multisort(array_column($_POST['emails'], 'email'), SORT_ASC, $_POST['emails']);
-        return response($_POST['emails']);
+        array_multisort(array_column($request['emails'], 'email'), SORT_ASC, $request['emails']);
+        return response($request['emails']);
     }
 
-    public static function getEmailsSortedByDate()
+    public static function getEmailsSortedByDate($request)
     {
-        array_multisort(array_column($_POST['emails'], 'date'), SORT_DESC, $_POST['emails']);
-        return response($_POST['emails']);
+        array_multisort(array_column($request['emails'], 'date'), SORT_DESC, $request['emails']);
+        return response($request['emails']);
     }
     
-    public static function getEmailsSortedByHost()
+    public static function getEmailsSortedByHost($request)
     {
         $validEmails = array();
-        foreach ($_POST['emails'] as $key => $value)
+        foreach ($request['emails'] as $key => $value)
         {
-            if(str_contains(strtolower($_POST['emails'][$key]['host']), strtolower($_POST['host'])))
+            if(str_contains(strtolower($request['emails'][$key]['host']), strtolower($request['host'])))
             {
-                $validEmails[] = $_POST['emails'][$key];
+                $validEmails[] = $request['emails'][$key];
             }
         }
         return response($validEmails);
@@ -101,21 +101,21 @@ class Email
         return response($hosts);
     }
 
-    public static function searchEmail()
+    public static function searchEmail($request)
     {
         $validEmails = array();
-        foreach ($_POST['emails'] as $key => $value)
+        foreach ($request['emails'] as $key => $value)
         {
-            if(str_contains(strtolower($_POST['emails'][$key]['email']), strtolower($_POST['input'])))
+            if(str_contains(strtolower($request['emails'][$key]['email']), strtolower($request['input'])))
             {
-                $validEmails[] = $_POST['emails'][$key];
+                $validEmails[] = $request['emails'][$key];
             }
         }
         return response($validEmails);
     }
 
-    public static function deleteEmail()
+    public static function deleteEmail($request)
     {
-        return response((new Database)->get()->query(sprintf("DELETE FROM `emails` WHERE `id`=%d ;", $_POST['id'])));
+        return response((new Database)->get()->query(sprintf("DELETE FROM `emails` WHERE `id`=%d ;", $request['id'])));
     }
 }
