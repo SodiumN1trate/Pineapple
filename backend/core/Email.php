@@ -46,10 +46,10 @@ class Email
     }
 
     // Emails from db
-    public static function getEmailList($sort_by, $order, $like = '@')
+    public static function getEmailList()
     {
         $allEmails = array();
-        $query = (new Database)->get()->query(sprintf("SELECT * FROM `emails` WHERE `email` LIKE '%s' ORDER BY `%s` %s;", '%' . $like . '%', $sort_by, $order));
+        $query = (new Database)->get()->query("SELECT * FROM `emails`");
         while($result = $query->fetch_assoc()){
             $allEmails[] = $result;
         }
@@ -57,40 +57,75 @@ class Email
     }
 
     // Emails for response
-    public static function getEmails()
+    public static function getEmails($request)
     {
-        return response(Email::getEmailList('date', 'DESC'));
+        $search_bar = isset($request['search_bar']) ? $request['search_bar'] : NULL ;
+        $host = isset($request['host']) ? $request['host'] : NULL ;
+        $sort = isset($request['sort']) ? $request['sort'] : NULL ;
+        $emails = array();
+        
+        if($search_bar)
+        {
+            $emails = Email::searchEmail($search_bar, $emails);
+        }
+        
+        if($host)
+        {
+            $emails = Email::getEmailsSortedByHost($host, $emails);
+        }
+        
+        if($sort)
+        {
+            $emails = Email::sortEmails($sort, $emails);
+        }
+
+        if(!$emails)
+        {
+            return response(Email::getEmailList());
+        }
+        else
+        {
+            return response($emails);
+        }
     }
 
-    public static function getEmailsSortedByName($request)
+    public static function sortEmails($sort_by, $emails)
     {
-        array_multisort(array_column($request['emails'], 'email'), SORT_ASC, $request['emails']);
-        return response($request['emails']);
-    }
-
-    public static function getEmailsSortedByDate($request)
-    {
-        array_multisort(array_column($request['emails'], 'date'), SORT_DESC, $request['emails']);
-        return response($request['emails']);
+        if(empty($emails))
+        {
+            $emails = Email::getEmailList();
+        }
+        if ($sort_by == 'name')
+        {
+            array_multisort(array_column($emails, 'email'), SORT_ASC, $emails);
+        }
+        elseif ($sort_by == 'date') {
+            array_multisort(array_column($emails, 'date'), SORT_DESC, $emails);
+        }
+        return $emails;
     }
     
-    public static function getEmailsSortedByHost($request)
+    public static function getEmailsSortedByHost($host, $emails)
     {
         $validEmails = array();
-        foreach ($request['emails'] as $key => $value)
+        if(!$emails)
         {
-            if(str_contains(strtolower($request['emails'][$key]['host']), strtolower($request['host'])))
+            $emails = Email::getEmailList();
+        }
+        foreach ($emails as $key => $value)
+        {
+            if(str_contains(strtolower($emails[$key]['host']), strtolower($host)))
             {
-                $validEmails[] = $request['emails'][$key];
+                $validEmails[] = $emails[$key];
             }
         }
-        return response($validEmails);
+        return $validEmails;
     }
 
     public static function getHosts()
     {
         $hosts = array();
-        $emails = Email::getEmailList('date', 'DESC');
+        $emails = Email::getEmailList();
         foreach ($emails as $key => $value)
         {
             $host = $emails[$key]['host'];
@@ -101,22 +136,21 @@ class Email
         return response($hosts);
     }
 
-    public static function searchEmail($request)
+    public static function searchEmail($input, $emails)
     {
         $validEmails = array();
-        foreach ($request['emails'] as $key => $value)
+        if(empty($emails))
         {
-            if(str_contains(strtolower($request['emails'][$key]['email']), strtolower($request['input'])))
+            $emails = Email::getEmailList();
+        }
+        foreach ($emails as $key => $value)
+        {
+            if(str_contains(strtolower($emails[$key]['email']), strtolower($input)))
             {
-                $validEmails[] = $request['emails'][$key];
+                $validEmails[] =  $emails[$key];
             }
         }
-        return response($validEmails);
-    }
-
-    public static function filterEmail($request)
-    {
-        
+        return $validEmails;
     }
 
     public static function deleteEmail($request)

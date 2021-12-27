@@ -6,10 +6,10 @@
             <th>Date</th>
         </tr>
     </table>
-    <h2 id="error"></h2>
     <div>
         <h1>Search</h1>
         <input type="text" id="search-bar">
+        <button id="search">Search</button>
     </div>
 
     <div>
@@ -29,11 +29,11 @@
 
 <script>
 
-let email_list = {}
-let search_result_emails = {}
+let host = ''
+let sort = ''
 
 function render_emails(emails) {
-    $('table tr.row').remove()
+    remove_rows()
     emails.forEach(email => {
         $('table tr:last').after(`
             <tr class="row">
@@ -47,29 +47,15 @@ function render_emails(emails) {
     add_delete_to_emails()
 }
 
-function set_error_message(message) {
-    $('h2#error').html(message)
+function remove_rows() {
+    $('table tr.row').remove()
 }
 
 function add_listener_to_host_buttons() {
-    $(".host-button").each((index, element) => {
+    $('.host-button').each((index, element) => {
         $(element).click(() => {
-            $.ajax({
-                type: 'POST',
-                url: '../sorted_by_host',
-                data: { host: $(element).text(), emails: search_result_emails.length === undefined ? email_list : search_result_emails},
-                success: (response) => {
-                    console.log(response)
-                    if(response.length < 1)
-                    {
-                        set_error_message("No such emails")
-                    }
-                    else{
-                        set_error_message("")
-                        render_emails(response)
-                    }
-                }
-            })
+            host = $(element).text()
+            get_emails()
         })
     })
 }
@@ -91,18 +77,12 @@ function add_delete_to_emails() {
 }
 
 function get_emails() {
-    // Get emails sorted by date ASC
     $.ajax({
         type: 'GET',
-        url: '../get_email_list',
-        success: (response) => {
-            email_list = response
-            render_emails(response)
-        }
+        url: `../get_email_list?search_bar=${$('#search-bar').val()}&host=${host}&sort=${sort}`,
+        success: (response) => { render_emails(response) }
     })
 }
-
-get_emails()
 
 // Get Hosts
 $.ajax({
@@ -118,47 +98,30 @@ $.ajax({
     }
 })
 
-
 $('#sort-date').click(()=>{
-    $.ajax({
-        type: 'POST',
-        url: '../sorted_by_date',
-        data: {emails: search_result_emails.length === undefined ? email_list : search_result_emails},
-        success: (response)=>{ render_emails(response) }
-    })
+    sort = 'date'
+    get_emails()
 })
 
 $('#sort-name').click(()=>{
-    $.ajax({
-        type: 'POST',
-        url: '../sorted_by_name',
-        data: { emails: search_result_emails.length === undefined ? email_list : search_result_emails },
-        success: (response)=>{ render_emails(response)}
-    })
+    sort = 'name'
+    get_emails()
 })
 
-$('#search-bar').keyup(() => {
-    if(!$('#search-bar').val()){
-        get_emails()
-        search_result_emails = {}
-    }
-    else{
-        $.ajax({
-            type: 'POST',
-            url: '../search_email',
-            data: { input: $('#search-bar').val(), emails: email_list },
-            success: (response) => {
-                search_result_emails = response
-                render_emails(response)
-            }
-        })
-    }
+$('#search').click(() => {
+    get_emails()
 })
 
 $("#all_emails").click(()=>{
+    $('#search-bar').val('')
+    host = ''
+    sort = ''
     get_emails()
-    search_result_emails = {}
 })
+
+
+
+get_emails()
 
 </script>
 

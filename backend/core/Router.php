@@ -29,7 +29,7 @@ class Router
                     }
                     else
                     {
-                        call_user_func($this->controller[$uriKey]);
+                        call_user_func($this->controller[$uriKey], $_GET);
                     }
                 }
                 else
