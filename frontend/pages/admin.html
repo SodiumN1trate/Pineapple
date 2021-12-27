@@ -33,7 +33,7 @@ let host = ''
 let sort = ''
 
 function render_emails(emails) {
-    remove_rows()
+    $('table tr.row').remove()
     emails.forEach(email => {
         $('table tr:last').after(`
             <tr class="row">
@@ -45,10 +45,6 @@ function render_emails(emails) {
     })
 
     add_delete_to_emails()
-}
-
-function remove_rows() {
-    $('table tr.row').remove()
 }
 
 function add_listener_to_host_buttons() {
@@ -64,12 +60,13 @@ function add_delete_to_emails() {
     $("table tr.row").each((index, row) => {
         $(row).dblclick((event) => {
             $.ajax({
-                type: "POST",
-                url: "../delete_email",
-                data: {id: event.target.parentNode.childNodes[1].innerHTML},
+                type: 'delete',
+                url: `../delete_email?id=${event.target.parentNode.childNodes[1].innerHTML}`,
                 success: (response) => {
                     alert("Email deleted!")
-                    get_emails();
+                    $('.host-button').remove()
+                    get_emails()
+                    get_host_buttons()
                 }
             })
         })
@@ -84,19 +81,20 @@ function get_emails() {
     })
 }
 
-// Get Hosts
-$.ajax({
-    type: 'GET',
-    url: '../get_host_list',
-    success: (response)=>{
-        response.forEach(host => {
-            $('.hosts h1').after(`
-                <button class="host-button">${ host }</button>
+function get_host_buttons(params) {
+    $.ajax({
+        type: 'GET',
+        url: '../get_host_list',
+        success: (response) => {
+            response.forEach(host => {
+                $('.hosts h1').after(`
+                <button class="host-button">${host}</button>
             `)
-        })
-        add_listener_to_host_buttons();
-    }
-})
+            })
+            add_listener_to_host_buttons();
+        }
+    })
+}
 
 $('#sort-date').click(()=>{
     sort = 'date'
@@ -119,9 +117,9 @@ $("#all_emails").click(()=>{
     get_emails()
 })
 
-
-
 get_emails()
+get_host_buttons()
+
 
 </script>
 

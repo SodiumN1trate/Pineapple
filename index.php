@@ -14,6 +14,6 @@ $router->add('/email_list', 'Page::client');
 $router->add('/add_email', 'Email::addEmail');
 $router->add('/get_email_list', 'Email::getEmails');
 $router->add('/get_host_list', 'Email::getHosts');
-$router->add('/delete_email', 'Email::deleteEmail', 'POST');
+$router->add('/delete_email', 'Email::deleteEmail');
 
 $router->submit();
